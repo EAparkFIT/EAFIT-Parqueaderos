@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <script defer src="https://t.contentsquare.net/uxa/7b0a6b16aaf4e.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#00458f" />
@@ -737,6 +736,7 @@ const loaders = {
 };
 
 const PAGES = {'welcome': 'bienvenida.html', 'visitor-form': 'visitante-recibir-ticket.html', 'visitor-ticket': 'visitante-ticket-ingreso.html', 'login': 'acceso-eafitense.html', 'eafit-home': 'inicio-eafitense.html', 'parking': 'parqueaderos-disponibilidad.html', 'pay': 'pago-inicio.html', 'pay-carnet': 'pago-con-carnet.html', 'pay-nocarnet': 'pago-sin-carnet.html', 'pse': 'pago-pse-datos.html', 'pse-bank': 'pago-pse-banco.html', 'pay-totem': 'pago-fisico-totem.html', 'receipt': 'comprobante-pago.html', 'plates': 'placas-registro.html', 'plates-delete': 'placas-eliminar.html', 'totems': 'mapa-totems.html', 'special': 'espacios-especiales.html', 'bank': 'mis-pagos.html', 'profile': 'perfil.html', 'recharge': 'recarga-carnet.html', 'terms': 'terminos-condiciones.html', 'info': 'ajustes.html', 'payment-info': 'informacion-pagos.html'};
+const USER_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>';
 let flash = null;
 const setFlash = (message) => { flash = message; };
 
@@ -780,6 +780,9 @@ function goBack() {
 function initPage() {
   const id = document.body.dataset.screen;
   document.querySelector('.back').style.visibility = id === 'welcome' || id === 'eafit-home' ? 'hidden' : 'visible';
+  // En páginas compartidas, con sesión Eafitense el botón superior pasa a ser el de cuenta (icono de usuario).
+  const acct = document.querySelector('.topbar [data-go="info"]');
+  if (acct && session.token && !acct.querySelector('svg')) { acct.innerHTML = USER_ICON; acct.setAttribute('aria-label', 'Mi cuenta'); acct.title = 'Mi cuenta'; }
   const k = historyStack.lastIndexOf(id);
   historyStack = k >= 0 ? historyStack.slice(0, k + 1) : [...historyStack, id];
   if (flash) { const m = flash; flash = null; toast(m); }
